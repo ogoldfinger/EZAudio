@@ -235,9 +235,9 @@
 }
 
 #pragma mark - OSStatus Utility
-+(void)checkResult:(OSStatus)result
++(BOOL)checkResult:(OSStatus)result
          operation:(const char *)operation {
-	if (result == noErr) return;
+	if (result == noErr) return YES;
 	char errorString[20];
 	// see if it appears to be a 4-char-code
 	*(UInt32 *)(errorString + 1) = CFSwapInt32HostToBig(result);
@@ -248,7 +248,8 @@
 		// no, format it as an integer
 		sprintf(errorString, "%d", (int)result);
 	fprintf(stderr, "Error: %s (%s)\n", operation, errorString);
-	exit(1);
+//	exit(1);
+    return NO;
 }
 
 #pragma mark - Math Utility

@@ -229,7 +229,7 @@
  @param result    The OSStatus representing the result of an operation
  @param operation A string (const char, not NSString) describing the operation taking place (will print if fails)
  */
-+(void)checkResult:(OSStatus)result
++(BOOL)checkResult:(OSStatus)result
          operation:(const char*)operation;
 
 #pragma mark - Plot Utility
