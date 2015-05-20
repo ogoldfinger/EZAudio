@@ -243,12 +243,21 @@
             float rms = [EZAudio RMS:bufferList->mBuffers[0].mData
                               length:bufferSize];
             _waveformData[i] = rms;
-        } else {
-            _waveformData[i] = 0;
         }
 
         // Since we malloc'ed, we should cleanup
         [EZAudio freeBufferList:bufferList];
+        
+        // if we faild to read sector, just fail entire waveform since file may be corrupt and probably won't post anyway
+        // eventually, it'd be nice to autoupdate the waveform and duration based on where the bad sectors were found
+        if(!success) {
+            _waveformData = nil;
+            _waveformTotalBuffers = 0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                waveformDataCompletionBlock(_waveformData, _waveformTotalBuffers);
+            });
+            return;
+        }
     }
     
     // Seek the audio file back to the beginning
