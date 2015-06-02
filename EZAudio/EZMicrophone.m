@@ -124,20 +124,24 @@ static OSStatus inputCallback(void                          *inRefCon,
 }
 
 #pragma mark - Initialization
--(id)init {
-  self = [super init];
-  if(self){
+- (void) _initialize {
     // Clear the float buffer
     floatBuffers = NULL;
     // We're not fetching anything yet
     _isConfigured = NO;
     _isFetching   = NO;
     if( !_isConfigured ){
-      // Create the input audio graph
-      [self _createInputUnit];
-      // We're configured meow
-      _isConfigured = YES;
+        // Create the input audio graph
+        [self _createInputUnit];
+        // We're configured meow
+        _isConfigured = YES;
     }
+}
+
+-(id)init {
+  self = [super init];
+  if(self){
+      [self _initialize];
   }
   return self;
 }
@@ -146,17 +150,7 @@ static OSStatus inputCallback(void                          *inRefCon,
   self = [super init];
   if(self){
     self.microphoneDelegate = microphoneDelegate;
-    // Clear the float buffer
-    floatBuffers = NULL;
-    // We're not fetching anything yet
-    _isConfigured = NO;
-    _isFetching   = NO;
-    if( !_isConfigured ){
-      // Create the input audio graph
-      [self _createInputUnit];
-      // We're configured meow
-      _isConfigured = YES;
-    }
+    [self _initialize];
   }
   return self;
 }
@@ -167,6 +161,7 @@ static OSStatus inputCallback(void                          *inRefCon,
   if(self){
     _customASBD  = YES;
     streamFormat = audioStreamBasicDescription;
+    [self _initialize];
   }
   return self;
 }
